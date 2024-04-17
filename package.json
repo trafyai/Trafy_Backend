@@ -1,4 +1,11 @@
 {
+  "name": "trafy-backend",
+  "version": "1.0.0",
+  "description": "Backend for Trafy",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
