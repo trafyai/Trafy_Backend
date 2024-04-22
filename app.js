@@ -4,13 +4,7 @@ const cors = require("cors");
 const app = express();
 const port = 5000;
 
-const corsOptions = {
-  origin: 'https://trafyai.com/course-enquiry'
-  , // replace with your frontend domain
-  optionsSuccessStatus: 204,
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
@@ -25,7 +19,7 @@ function sendEmail({ email, message }) {
     });
 
     const mail_configs = {
-      from: 'trafyai <info@trafyai.com>',
+      from: 'Trafyai <info@trafyai.com>',
       to: email,
       subject: 'Thank You For submitting the Form !',
       html: `
