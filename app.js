@@ -4,7 +4,12 @@ const cors = require("cors");
 const app = express();
 const port = 5000;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://trafyai.com', // replace with your frontend domain
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
