@@ -19,7 +19,7 @@ function sendEmail({ email, message }) {
     });
 
     const mail_configs = {
-      from: 'Trafyai <info@trafyai.com>',
+      from: 'trafyai <info@trafyai.com>',
       to: email,
       subject: 'Thank You For submitting the Form !',
       html: `
