@@ -5,7 +5,8 @@ const app = express();
 const port = 5000;
 
 const corsOptions = {
-  origin: 'https://trafyai.com', // replace with your frontend domain
+  origin: 'https://trafyai.com/course-enquiry'
+  , // replace with your frontend domain
   optionsSuccessStatus: 204,
 };
 
