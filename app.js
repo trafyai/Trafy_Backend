@@ -2,10 +2,10 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
-const port = 5000;
+const port = 5001;
 
 const corsOptions = {
-  origin: 'https://trafyai.com', // Replace with your frontend domain
+  origin: 'https://trafyai.com/course-enquiry', // Replace with your frontend domain
   optionsSuccessStatus: 204,
 };
 
