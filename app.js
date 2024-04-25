@@ -2,14 +2,15 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
-const port = 5001;
+const port =5002
 
 const corsOptions = {
-  origin: 'https://trafyai.com/course-enquiry', // Replace with your frontend domain
+  origin: 'https://trafyai.com', // Update this to your frontend domain
   optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
@@ -47,7 +48,7 @@ function sendEmail({ email, message }) {
   }); 
 }
 
-app.post("/submit", (req, res) => {
+app.post("/course-enquiry/submit", (req, res) => {
   const { email, message } = req.body;
   sendEmail({ email, message })
     .then((response) => res.send(response.message))
