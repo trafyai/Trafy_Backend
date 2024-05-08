@@ -5,7 +5,7 @@ const app = express();
 const port = 5002;
 
 const corsOptions = {
-  origin: ['https://trafyai.com','http://localhost:3000'],
+  origin: ['http://localhost:3000', 'https://trafyai.com'],
   optionsSuccessStatus: 204,
 };
 
@@ -25,7 +25,7 @@ function sendEmail({ email, formType }) {
 
     let mailConfigs = {
       from: 'Trafyai <info@trafyai.com>',
-      to: email, // Add recipient email here
+      to: 'info@trafyai.com', // Add recipient email here
       subject: '',
       html: '',
     };
@@ -64,10 +64,6 @@ function sendEmail({ email, formType }) {
 
 app.post("/course-enquiry/submit", (req, res) => {
   const { email } = req.body;
-  if (!email) {
-    return res.status(400).send("Email address is required.");
-  }
-
   sendEmail({ email, formType: 'courseEnquiry' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
@@ -75,15 +71,12 @@ app.post("/course-enquiry/submit", (req, res) => {
 
 app.post("/landing-page/submit", (req, res) => {
   const { email } = req.body;
-  if (!email) {
-    return res.status(400).send("Email address is required.");
-  }
 
+  // Process the email data and send email
   sendEmail({ email, formType: 'landingPage' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
-
 
 app.listen(port, () => {
   console.log(`nodemailer is listening at http://localhost:${port}`);
