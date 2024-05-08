@@ -52,11 +52,25 @@ function sendEmail({ email, formType }) {
       `;
     }
 
+    else if (formType === 'newsletter') {
+      mailConfigs.subject = 'Welcome to Our Newsletter!';
+      mailConfigs.html = `
+        <p>Dear Subscriber,</p>
+        <p>Thank you for subscribing to our newsletter. We're excited to have you on board!</p>
+        <p>Expect to receive regular updates, exclusive offers, and interesting content delivered straight to your inbox.</p>
+        <br>
+        <p>Best Regards,</p>
+        <p>The Trafy Team</p>
+      `;
+    }
+    
+
     transporter.sendMail(mailConfigs, function (error, info) {
       if (error) {
-        console.log(error);
+        console.log("Error sending email:", error);
         return reject({ message: `An error has occurred` });
       }
+      console.log("Email sent successfully:", info.response);
       return resolve({ message: "Email sent successfully" });
     });
   });
@@ -74,6 +88,15 @@ app.post("/landing-page/submit", (req, res) => {
 
   // Process the email data and send email
   sendEmail({ email, formType: 'landingPage' })
+    .then((response) => res.send(response.message))
+    .catch((error) => res.status(500).send(error.message));
+});
+
+app.post("/newsletter/submit", (req, res) => {
+  const { email } = req.body;
+
+  // Process the email data and send email
+  sendEmail({ email, formType: 'newsletter' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
