@@ -2,10 +2,12 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
-const port =5002
+const port = 5002;
+
+
 
 const corsOptions = {
-  origin: 'https://trafyai.com', // Update this to your frontend domain
+  origin: ['http://localhost:3000', 'https://trafyai.com'],
   optionsSuccessStatus: 204,
 };
 
@@ -14,7 +16,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
-function sendEmail({ email, message }) {
+function sendEmail({ email, formType }) {
   return new Promise((resolve, reject) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -24,21 +26,36 @@ function sendEmail({ email, message }) {
       },
     });
 
-    const mail_configs = {
+    let mailConfigs = {
       from: 'Trafyai <info@trafyai.com>',
       to: email,
-      subject: 'Thank You For submitting the Form !',
-      html: `
+      subject: '',
+      html: '',
+    };
+
+    if (formType === 'courseEnquiry') {
+      mailConfigs.subject = 'Thank You For Your Course Enquiry!';
+      mailConfigs.html = `
         <p>Dear User,</p>
-        <p>Thank you for submitting the form. We appreciate your interest in our services.</p>
+        <p>Thank you for your course enquiry. We appreciate your interest in our courses.</p>
+        <p>We will review your enquiry and get back to you as soon as possible.</p>
+        <br>
+        <p>Best Regards,</p>
+        <p>Trafy Team</p>
+      `;
+    } else if (formType === 'landingPage') {
+      mailConfigs.subject = 'Thank You For Your Interest!';
+      mailConfigs.html = `
+        <p>Dear User,</p>
+        <p>Thank you for your interest in our services. We appreciate your time.</p>
         <p>Your message has been received, and we will get back to you shortly.</p>
         <br>
         <p>Best Regards,</p>
         <p>Trafy Team</p>
-      `,
-    };
+      `;
+    }
     
-    transporter.sendMail(mail_configs, function (error, info) {
+    transporter.sendMail(mailConfigs, function (error, info) {
       if (error) {
         console.log(error);
         return reject({ message: `An error has occurred` });
@@ -49,8 +66,15 @@ function sendEmail({ email, message }) {
 }
 
 app.post("/course-enquiry/submit", (req, res) => {
-  const { email, message } = req.body;
-  sendEmail({ email, message })
+  const { email } = req.body;
+  sendEmail({ email, formType: 'courseEnquiry' })
+    .then((response) => res.send(response.message))
+    .catch((error) => res.status(500).send(error.message));
+});
+
+app.post("/landing-page/submit", (req, res) => {
+  const { email } = req.body;
+  sendEmail({ email, formType: 'landingPage' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
