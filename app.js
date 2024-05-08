@@ -5,7 +5,7 @@ const app = express();
 const port = 5002;
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://trafyai.com'],
+  origin: ['https://trafyai.com','http://localhost:3000'],
   optionsSuccessStatus: 204,
 };
 
