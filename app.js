@@ -64,6 +64,10 @@ function sendEmail({ email, formType }) {
 
 app.post("/course-enquiry/submit", (req, res) => {
   const { email } = req.body;
+  if (!email) {
+    return res.status(400).send("Email address is required.");
+  }
+
   sendEmail({ email, formType: 'courseEnquiry' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
@@ -71,12 +75,15 @@ app.post("/course-enquiry/submit", (req, res) => {
 
 app.post("/landing-page/submit", (req, res) => {
   const { email } = req.body;
+  if (!email) {
+    return res.status(400).send("Email address is required.");
+  }
 
-  // Process the email data and send email
   sendEmail({ email, formType: 'landingPage' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
+
 
 app.listen(port, () => {
   console.log(`nodemailer is listening at http://localhost:${port}`);
