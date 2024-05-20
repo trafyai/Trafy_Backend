@@ -40,7 +40,7 @@ function sendEmail({ email, formType }) {
         <p>Best Regards,</p>
         <p>Trafy Team</p>
       `;
-    } else if (formType === 'landingPage') {
+    } else if (formType === 'freedemo') {
       mailConfigs.subject = 'Thank You For Your Interest!';
       mailConfigs.html = `
         <p>Dear User,</p>
@@ -60,7 +60,7 @@ function sendEmail({ email, formType }) {
         <p>Expect to receive regular updates, exclusive offers, and interesting content delivered straight to your inbox.</p>
         <br>
         <p>Best Regards,</p>
-        <p>The Trafy Team</p>
+        <p>Trafy Team</p>
       `;
     }
     
@@ -83,14 +83,13 @@ app.post("/course-enquiry/submit", (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 });
 
-app.post("/landing-page/submit", (req, res) => {
+app.post("/freedemo-form/submit", (req, res) => {
   const { email } = req.body;
-
-  // Process the email data and send email
-  sendEmail({ email, formType: 'landingPage' })
+  sendEmail({ email, formType: 'freedemo' })
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
+
 
 app.post("/newsletter/submit", (req, res) => {
   const { email } = req.body;
