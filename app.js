@@ -30,39 +30,54 @@ function sendEmail({ email, formType }) {
       html: '',
     };
 
-    if (formType === 'courseEnquiry') {
-      mailConfigs.subject = 'Thank You For Your Course Enquiry!';
+    // if (formType === 'courseEnquiry') {
+    //   mailConfigs.subject = 'Thank You For Your Course Enquiry!';
+    //   mailConfigs.html = `
+    //   <p>Dear User,</p>
+    //   <p>Thank you for your interest in [Course Name]! We're glad to assist you.</p>
+    //   <p>Our team will contact you shortly to discuss your inquiry and provide more details about the course.</p>
+    //   <p>Feel free to explore our website in the meantime. If you have any questions, contact us at info@trafyai.com & 123-456-7890.</p>
+    //   <br>
+    //   <p>Looking forward to speaking with you!</p>
+    //   <p>Best regards,</p>
+    //   `;
+    // } else if (formType === 'freedemo') {
+    //   mailConfigs.subject = 'Thank You For Your Interest!';
+    //   mailConfigs.html = `
+    //     <p>Dear User,</p>
+    //     <p>Thank you for your interest in our services. We appreciate your time.</p>
+    //     <p>Your message has been received, and we will get back to you shortly.</p>
+    //     <br>
+    //     <p>Best Regards,</p>
+    //     <p>Trafy Team</p>
+    //   `;
+    // }
+
+     if (formType === 'newsletter') {
+      mailConfigs.subject = 'Welcome to Our Newsletter!';
       mailConfigs.html = `
-        <p>Dear User,</p>
-        <p>Thank you for your course enquiry. We appreciate your interest in our courses.</p>
-        <p>We will review your enquiry and get back to you as soon as possible.</p>
-        <br>
-        <p>Best Regards,</p>
-        <p>Trafy Team</p>
-      `;
-    } else if (formType === 'freedemo') {
-      mailConfigs.subject = 'Thank You For Your Interest!';
-      mailConfigs.html = `
-        <p>Dear User,</p>
-        <p>Thank you for your interest in our services. We appreciate your time.</p>
-        <p>Your message has been received, and we will get back to you shortly.</p>
+        <p>Dear Subscriber,</p>
+        <p>Thank you for subscribing to our newsletter! We're excited to have you join us on this journey of learning and growth.</p>
+        <p>Your support means the world to us, and we're committed to 
+        delivering valuable content straight to your inbox. We can't wait to share insights, tips, and inspiration.
+        </p>
         <br>
         <p>Best Regards,</p>
         <p>Trafy Team</p>
       `;
     }
 
-    else if (formType === 'newsletter') {
-      mailConfigs.subject = 'Welcome to Our Newsletter!';
-      mailConfigs.html = `
-        <p>Dear Subscriber,</p>
-        <p>Thank you for subscribing to our newsletter. We're excited to have you on board!</p>
-        <p>Expect to receive regular updates, exclusive offers, and interesting content delivered straight to your inbox.</p>
-        <br>
-        <p>Best Regards,</p>
-        <p>Trafy Team</p>
-      `;
-    }
+    // else if (formType === 'welcome') {
+    //   mailConfigs.subject = 'Welcome to Trafyai!';
+    //   mailConfigs.html = `
+    //     <p>Dear User,</p>
+    //     <p>Welcome to Trafyai Thank you for signing up.</p>
+    //     <p>We're excited to have you on board!</p>
+    //     <br>
+    //     <p>Best Regards,</p>
+    //     <p>Trafy Team</p>
+    //   `;
+    // }
     
 
     transporter.sendMail(mailConfigs, function (error, info) {
@@ -76,19 +91,19 @@ function sendEmail({ email, formType }) {
   });
 }
 
-app.post("/course-enquiry/submit", (req, res) => {
-  const { email } = req.body;
-  sendEmail({ email, formType: 'courseEnquiry' })
-    .then((response) => res.send(response.message))
-    .catch((error) => res.status(500).send(error.message));
-});
+// app.post("/course-enquiry/submit", (req, res) => {
+//   const { email } = req.body;
+//   sendEmail({ email, formType: 'courseEnquiry' })
+//     .then((response) => res.send(response.message))
+//     .catch((error) => res.status(500).send(error.message));
+// });
 
-app.post("/freedemo-form/submit", (req, res) => {
-  const { email } = req.body;
-  sendEmail({ email, formType: 'freedemo' })
-    .then((response) => res.send(response.message))
-    .catch((error) => res.status(500).send(error.message));
-});
+// app.post("/freedemo-form/submit", (req, res) => {
+//   const { email } = req.body;
+//   sendEmail({ email, formType: 'freedemo' })
+//     .then((response) => res.send(response.message))
+//     .catch((error) => res.status(500).send(error.message));
+// });
 
 
 app.post("/newsletter/submit", (req, res) => {
@@ -99,6 +114,13 @@ app.post("/newsletter/submit", (req, res) => {
     .then((response) => res.send(response.message))
     .catch((error) => res.status(500).send(error.message));
 });
+
+// app.post("/signup", (req, res) => {
+//   const { email } = req.body;
+//   sendEmail({ email, formType: 'welcome' }) // Assuming you want to send a welcome email
+//      .then((response) => res.send(response.message))
+//      .catch((error) => res.status(500).send(error.message));
+// });
 
 app.listen(port, () => {
   console.log(`nodemailer is listening at http://localhost:${port}`);
