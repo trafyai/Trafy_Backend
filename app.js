@@ -24,7 +24,7 @@ function sendEmail({ email, formType }) {
     });
 
     let mailConfigs = {
-      from: 'Trafyai <info@trafyai.com>',
+      from: 'trafyai <info@trafyai.com>',
       to: email, // Add recipient email here
       subject: '',
       html: '',
@@ -63,7 +63,7 @@ function sendEmail({ email, formType }) {
         </p>
         <br>
         <p>Best Regards,</p>
-        <p>Trafy Team</p>
+        <p>trafy Team</p>
       `;
     }
 
