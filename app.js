@@ -63,7 +63,7 @@ function sendEmail({ email, formType }) {
         </p>
         <br>
         <p>Best Regards,</p>
-        <p>trafy Team</p>
+        <p>trafyai team</p>
       `;
     }
 
