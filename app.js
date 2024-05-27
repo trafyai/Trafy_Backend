@@ -13,7 +13,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
-function sendEmail({ email, formType }) {
+function sendEmail({ email,fname, course,formType }) {
   return new Promise((resolve, reject) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -66,6 +66,19 @@ function sendEmail({ email, formType }) {
         <p>trafyai team</p>
       `;
     }
+    else if(formType === 'courseEnquiry') {
+      mailConfigs.subject = 'Thank You For Your Course Enquiry!';
+      mailConfigs.html = `
+      <p>Dear ${fname},</p>
+      <p>Thank you for your interest in  ${course}! We're glad to assist you.</p>
+      <p>Our team will contact you shortly to discuss your inquiry and provide more details about the course.</p>
+      <p>Feel free to explore our website in the meantime. If you have any questions, contact us at info@trafyai.com .</p>
+      <br>
+      <p>Looking forward to speaking with you!</p>
+      <p>Best regards,</p>
+      <p>trafyai team</p>
+      `;
+    }
 
     // else if (formType === 'welcome') {
     //   mailConfigs.subject = 'Welcome to Trafyai!';
@@ -91,12 +104,22 @@ function sendEmail({ email, formType }) {
   });
 }
 
-// app.post("/course-enquiry/submit", (req, res) => {
-//   const { email } = req.body;
-//   sendEmail({ email, formType: 'courseEnquiry' })
-//     .then((response) => res.send(response.message))
-//     .catch((error) => res.status(500).send(error.message));
-// });
+app.post("/course-enquiry/submit", (req, res) => {
+  const { email, fname, course } = req.body;
+  sendEmail({ email, fname, course, formType: 'courseEnquiry' })
+    .then((response) => res.send(response.message))
+    .catch((error) => res.status(500).send(error.message));
+});
+
+
+  app.post("/newsletter/submit", (req, res) => {
+    const { email } = req.body;
+  
+    // Process the email data and send email
+    sendEmail({ email, formType: 'newsletter' })
+      .then((response) => res.send(response.message))
+      .catch((error) => res.status(500).send(error.message));
+  });
 
 // app.post("/freedemo-form/submit", (req, res) => {
 //   const { email } = req.body;
@@ -106,14 +129,6 @@ function sendEmail({ email, formType }) {
 // });
 
 
-app.post("/newsletter/submit", (req, res) => {
-  const { email } = req.body;
-
-  // Process the email data and send email
-  sendEmail({ email, formType: 'newsletter' })
-    .then((response) => res.send(response.message))
-    .catch((error) => res.status(500).send(error.message));
-});
 
 // app.post("/signup", (req, res) => {
 //   const { email } = req.body;
