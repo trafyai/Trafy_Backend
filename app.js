@@ -41,17 +41,6 @@ function sendEmail({ email,fname, course,formType }) {
     //   <p>Looking forward to speaking with you!</p>
     //   <p>Best regards,</p>
     //   `;
-    // } else if (formType === 'freedemo') {
-    //   mailConfigs.subject = 'Thank You For Your Interest!';
-    //   mailConfigs.html = `
-    //     <p>Dear User,</p>
-    //     <p>Thank you for your interest in our services. We appreciate your time.</p>
-    //     <p>Your message has been received, and we will get back to you shortly.</p>
-    //     <br>
-    //     <p>Best Regards,</p>
-    //     <p>Trafy Team</p>
-    //   `;
-    // }
 
      if (formType === 'newsletter') {
       mailConfigs.subject = 'Welcome to Our Newsletter!';
@@ -77,6 +66,20 @@ function sendEmail({ email,fname, course,formType }) {
       <p>Looking forward to speaking with you!</p>
       <p>Best regards,</p>
       <p>trafyai team</p>
+      `;
+    }
+
+    else if  (formType === 'freedemo') {
+      mailConfigs.subject = ' Confirmation: Your Free Demo Enquiry';
+      mailConfigs.html = `
+        <p>Dear ${fname},</p>
+        <p>Thank you for your interest in our free demo !</p>
+        <p>Our team will contact you shortly to confirm the details and provide all necessary information.</p>
+        <p>Feel free to explore our website in the meantime. If you have any questions, contact us at info@trafyai.com .</p>
+        <br>
+        <p>Looking forward to having you join us ! </p>
+        <p>Best Regards,</p>
+        <p>trafyai Team</p>
       `;
     }
 
@@ -121,12 +124,12 @@ app.post("/course-enquiry/submit", (req, res) => {
       .catch((error) => res.status(500).send(error.message));
   });
 
-// app.post("/freedemo-form/submit", (req, res) => {
-//   const { email } = req.body;
-//   sendEmail({ email, formType: 'freedemo' })
-//     .then((response) => res.send(response.message))
-//     .catch((error) => res.status(500).send(error.message));
-// });
+app.post("/freedemo-form/submit", (req, res) => {
+  const { email,fname } = req.body;
+  sendEmail({ email,fname, formType: 'freedemo' })
+    .then((response) => res.send(response.message))
+    .catch((error) => res.status(500).send(error.message));
+});
 
 
 
