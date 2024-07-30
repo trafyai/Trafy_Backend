@@ -89,6 +89,10 @@ function sendEmail({ email, fname, course, formType }) {
   });
 }
 
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
 app.post("/course-enquiry/submit", (req, res) => {
   const { email, fname, course } = req.body;
   sendEmail({ email, fname, course, formType: 'courseEnquiry' } )
