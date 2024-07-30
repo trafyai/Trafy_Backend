@@ -13,10 +13,12 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));
 
-function sendEmail({ email,fname, course,formType }) {
+function sendEmail({ email, fname, course, formType }) {
   return new Promise((resolve, reject) => {
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: "info@trafyai.com",
         pass: "bkci mtei pwbj gxjh",
@@ -25,24 +27,12 @@ function sendEmail({ email,fname, course,formType }) {
 
     let mailConfigs = {
       from: 'trafyai <info@trafyai.com>',
-      to: email, // Add recipient email here
+      to: email,
       subject: '',
       html: '',
     };
 
-    // if (formType === 'courseEnquiry') {
-    //   mailConfigs.subject = 'Thank You For Your Course Enquiry!';
-    //   mailConfigs.html = `
-    //   <p>Dear User,</p>
-    //   <p>Thank you for your interest in [Course Name]! We're glad to assist you.</p>
-    //   <p>Our team will contact you shortly to discuss your inquiry and provide more details about the course.</p>
-    //   <p>Feel free to explore our website in the meantime. If you have any questions, contact us at info@trafyai.com & 123-456-7890.</p>
-    //   <br>
-    //   <p>Looking forward to speaking with you!</p>
-    //   <p>Best regards,</p>
-    //   `;
-
-     if (formType === 'newsletter') {
+    if (formType === 'newsletter') {
       mailConfigs.subject = 'Welcome to Our Newsletter!';
       mailConfigs.html = `
         <p>Dear Subscriber,</p>
@@ -54,8 +44,7 @@ function sendEmail({ email,fname, course,formType }) {
         <p>Best Regards,</p>
         <p>trafyai team</p>
       `;
-    }
-    else if(formType === 'courseEnquiry') {
+    } else if (formType === 'courseEnquiry') {
       mailConfigs.subject = 'Thank You For Your Course Enquiry!';
       mailConfigs.html = `
       <p>Dear ${fname},</p>
@@ -67,9 +56,7 @@ function sendEmail({ email,fname, course,formType }) {
       <p>Best regards,</p>
       <p>trafyai team</p>
       `;
-    }
-
-    else if  (formType === 'freedemo') {
+    } else if (formType === 'freedemo') {
       mailConfigs.subject = ' Confirmation: Your Free Demo Enquiry';
       mailConfigs.html = `
         <p>Dear ${fname},</p>
@@ -83,62 +70,54 @@ function sendEmail({ email,fname, course,formType }) {
       `;
     }
 
-    // else if (formType === 'welcome') {
-    //   mailConfigs.subject = 'Welcome to Trafyai!';
-    //   mailConfigs.html = `
-    //     <p>Dear User,</p>
-    //     <p>Welcome to Trafyai Thank you for signing up.</p>
-    //     <p>We're excited to have you on board!</p>
-    //     <br>
-    //     <p>Best Regards,</p>
-    //     <p>Trafy Team</p>
-    //   `;
-    // }
-    
-
-    transporter.sendMail(mailConfigs, function (error, info) {
+    transporter.verify((error, success) => {
       if (error) {
-        console.log("Error sending email:", error);
-        return reject({ message: `An error has occurred` });
+        console.error("Error verifying transporter:", error);
+        return reject({ message: `An error has occurred: ${error.message}` });
+      } else {
+        console.log("Server is ready to take our messages:", success);
+        transporter.sendMail(mailConfigs, function (error, info) {
+          if (error) {
+            console.log("Error sending email:", error);
+            return reject({ message: `An error has occurred: ${error.message}` });
+          }
+          console.log("Email sent successfully:", info.response);
+          return resolve({ message: "Email sent successfully" });
+        });
       }
-      console.log("Email sent successfully:", info.response);
-      return resolve({ message: "Email sent successfully" });
     });
   });
 }
 
 app.post("/course-enquiry/submit", (req, res) => {
   const { email, fname, course } = req.body;
-  sendEmail({ email, fname, course, formType: 'courseEnquiry' })
+  sendEmail({ email, fname, course, formType: 'courseEnquiry' } )
     .then((response) => res.send(response.message))
-    .catch((error) => res.status(500).send(error.message));
+    .catch((error) => {
+      console.error("Error in /course-enquiry/submit:", error);
+      res.status(500).send(error.message);
+    });
 });
 
-
-  app.post("/newsletter/submit", (req, res) => {
-    const { email } = req.body;
-  
-    // Process the email data and send email
-    sendEmail({ email, formType: 'newsletter' })
-      .then((response) => res.send(response.message))
-      .catch((error) => res.status(500).send(error.message));
-  });
+app.post("/newsletter/submit", (req, res) => {
+  const { email } = req.body;
+  sendEmail({ email, formType: 'newsletter' })
+    .then((response) => res.send(response.message))
+    .catch((error) => {
+      console.error("Error in /newsletter/submit:", error);
+      res.status(500).send(error.message);
+    });
+});
 
 app.post("/freedemo-form/submit", (req, res) => {
-  const { email,fname } = req.body;
-  sendEmail({ email,fname, formType: 'freedemo' })
+  const { email, fname } = req.body;
+  sendEmail({ email, fname, formType: 'freedemo' })
     .then((response) => res.send(response.message))
-    .catch((error) => res.status(500).send(error.message));
+    .catch((error) => {
+      console.error("Error in /freedemo-form/submit:", error);
+      res.status(500).send(error.message);
+    });
 });
-
-
-
-// app.post("/signup", (req, res) => {
-//   const { email } = req.body;
-//   sendEmail({ email, formType: 'welcome' }) // Assuming you want to send a welcome email
-//      .then((response) => res.send(response.message))
-//      .catch((error) => res.status(500).send(error.message));
-// });
 
 app.listen(port, () => {
   console.log(`nodemailer is listening at http://localhost:${port}`);
