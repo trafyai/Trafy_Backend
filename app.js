@@ -2,7 +2,7 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
-const port = 5002;
+const port = 8080;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://trafyai.com'],
